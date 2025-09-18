@@ -11,9 +11,15 @@ class AppWorldBenchmark(BaseBenchmark):
         self, agent_dir: str, config: Dict[str, Any], benchmark_name: str = "appworld_test_normal"
     ):
         self.benchmark_name = benchmark_name
-        if benchmark_name not in ["appworld_test_normal", "appworld_test_challenge"]:
+        valid_benchmark_names = [
+            "appworld_test_normal",
+            "appworld_test_challenge",
+            "appworld_dev",
+            "appworld_train",
+        ]
+        if benchmark_name not in valid_benchmark_names:
             raise ValueError(
-                "Invalid benchmark name. Use 'appworld_test_normal' or 'appworld_test_challenge'."
+                f"Invalid benchmark name {benchmark_name}. Use one of {valid_benchmark_names}."
             )
         self.split = benchmark_name.removeprefix("appworld_")
         self.setup_script = os.path.join(
@@ -28,10 +34,10 @@ class AppWorldBenchmark(BaseBenchmark):
         )
         # Load dataset splits
         self.splits = {
-            "train": self._read_task_ids("train.txt"),
-            "dev": self._read_task_ids("dev.txt"),
             "test_normal": self._read_task_ids("test_normal.txt"),
             "test_challenge": self._read_task_ids("test_challenge.txt"),
+            "dev": self._read_task_ids("dev.txt"),
+            "train": self._read_task_ids("train.txt"),
         }
         # Create benchmark dictionary
         self.benchmark = {}

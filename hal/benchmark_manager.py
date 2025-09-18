@@ -24,6 +24,8 @@ class BenchmarkManager:
                            'swebench_verified_mini', 
                            'appworld_test_normal',
                            'appworld_test_challenge',
+                           'appworld_dev',
+                           'appworld_train',
                            'taubench_retail',
                            'taubench_airline',
                            'gaia',
@@ -60,7 +62,9 @@ class BenchmarkManager:
                 benchmark = SWEBenchBenchmark(self.agent_dir, self.config, mini=True)
             else:    
                 benchmark = SWEBenchBenchmark(self.agent_dir, self.config, mini=False)
-        elif benchmark_name in ['appworld_test_normal', 'appworld_test_challenge']:
+        elif benchmark_name in [
+            'appworld_test_normal', 'appworld_test_challenge', 'appworld_dev', 'appworld_train'
+        ]:
             from .benchmarks.appworld import AppWorldBenchmark
             benchmark = AppWorldBenchmark(self.agent_dir, self.config, benchmark_name)
         elif benchmark_name in ['taubench_retail', 'taubench_airline']:
