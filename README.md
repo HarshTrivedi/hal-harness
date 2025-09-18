@@ -149,7 +149,7 @@ appworld install
 Download download in the AppWorld agent directory.
 
 ```bash
-appworld download data --root agents/appworld_agent
+appworld download data --root hal/benchmarks/appworld
 ```
 
 With the `appworld_agent`, you can run any agent in the [AppWorld repository](https://github.com/stonybrooknlp/appworld) via `hal-eval` as follows:
