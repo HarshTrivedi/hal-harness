@@ -2,8 +2,9 @@ import os
 
 from appworld import cli
 from appworld.common.path_store import path_store
-from appworld.common.utils import read_file, write_file
+from appworld.common.utils import write_file
 from appworld.evaluator import evaluate_dataset
+from appworld_experiments.configs._generator.run import make_experiment_config
 
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -22,11 +23,15 @@ def run(input: dict[str, dict], **kwargs) -> dict[str, str]:
     dataset_file_path = os.path.join(current_directory, "data", "datasets", f"{dataset_name}.txt")
     write_file("\n".join(task_ids), dataset_file_path)
     # create a sample config file for the experiment
-    reference_experiment_name = f"{kwargs['method_name']}_{kwargs['model_file_name']}_{actual_dataset_name}"
-    reference_experiment_config_file_path = os.path.join(
-        path_store.experiment_configs, f"{reference_experiment_name}.jsonnet"
+    model_file_name = kwargs["model_file_name"]
+    agent_name = kwargs["method_name"]
+    output_ = make_experiment_config(
+        model_name=model_file_name,
+        agent_name=agent_name,
+        dataset_name=actual_dataset_name,
+        save=False,
     )
-    reference_experiment_config = read_file(reference_experiment_config_file_path)
+    reference_experiment_config = output_["config"]
     actual_experiment_config = reference_experiment_config.replace(actual_dataset_name, dataset_name)
     actual_experiment_name = "output"
     actual_experiment_config_file_path = os.path.join(
