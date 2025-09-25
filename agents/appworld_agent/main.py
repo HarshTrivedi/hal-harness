@@ -32,8 +32,10 @@ def run(input: dict[str, dict], **kwargs) -> dict[str, str]:
         save=False,
     )
     reference_experiment_config = output_["config"]
-    actual_experiment_config = reference_experiment_config.replace(actual_dataset_name, dataset_name)
-    actual_experiment_name = "output"
+    actual_experiment_config = reference_experiment_config.replace(
+        actual_dataset_name, dataset_name
+    )
+    actual_experiment_name = "output-" + task_ids[0]  # has only 1 task_id in practice
     actual_experiment_config_file_path = os.path.join(
         path_store.experiment_configs, f"{actual_experiment_name}.jsonnet"
     )
@@ -54,4 +56,7 @@ def run(input: dict[str, dict], **kwargs) -> dict[str, str]:
         suppress_errors=True,
         include_details=True,
     )
+    # clean up
+    if os.path.exists(actual_experiment_config_file_path):
+        os.remove(actual_experiment_config_file_path)
     return {task_ids[0]: "Completed", "evaluation": evaluation}
