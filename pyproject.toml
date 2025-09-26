@@ -32,8 +32,8 @@ azure = [
     "paramiko==3.5.0",
 ]
 appworld = [
-    "appworld @ git+https://github.com/stonybrooknlp/appworld.git",
-    "appworld-experiments[simplified,smolagents] @ git+https://github.com/stonybrooknlp/appworld.git@main#egg=appworld-experiments&subdirectory=experiments",
+    "appworld>=0.2.0",
+    "appworld-experiments[simplified,smolagents]>=0.1.0",
 ]
 taubench = [
     "tau-bench @ git+https://github.com/benediktstroebl/tau-bench@807e348b46a225242d5a045a8cecc690719e4b21",
