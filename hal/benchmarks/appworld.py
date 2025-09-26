@@ -1,4 +1,5 @@
 import os
+from collections import defaultdict
 from typing import Any, Dict, List
 
 from .base_benchmark import BaseBenchmark
@@ -75,18 +76,34 @@ class AppWorldBenchmark(BaseBenchmark):
         Returns:
             Dictionary with calculated metrics and task lists
         """
-        successful_tasks = []
-        failed_tasks = []
+        successful_task_ids = []
+        failed_task_ids = []
+        scenario_id_to_successes = defaultdict(list)
         for task_id, result in eval_results.items():
-            if result.get("success", False):
-                successful_tasks.append(task_id)
+            scenario_id = task_id.split("_")[0]
+            success = result["success"]
+            scenario_id_to_successes[scenario_id].append(success)
+            if success:
+                successful_task_ids.append(task_id)
             else:
-                failed_tasks.append(task_id)
-        metrics = {}
-        metrics["successful_tasks"] = successful_tasks
-        metrics["failed_tasks"] = failed_tasks
-        accuracy = len(successful_tasks) / len(eval_results) if eval_results else 0.0
-        metrics["accuracy"] = accuracy
+                failed_task_ids.append(task_id)
+        scenario_id_to_success = {
+            scenario_id: all(successes)
+            for scenario_id, successes in scenario_id_to_successes.items()
+        }
+        scenario_goal_completion = (
+            sum(scenario_id_to_success.values()) / len(scenario_id_to_success)
+            if scenario_id_to_success
+            else 0.0
+        )
+        task_goal_completion = len(successful_task_ids) / len(eval_results) if eval_results else 0.0
+        metrics = {
+            "accuracy": task_goal_completion,
+            "task_goal_completion": task_goal_completion,
+            "scenario_goal_completion": scenario_goal_completion,
+            "successful_tasks": successful_task_ids,
+            "failed_tasks": failed_task_ids,
+        }
         return metrics
 
     def mount_benchmark(self):
