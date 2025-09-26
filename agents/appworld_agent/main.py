@@ -54,4 +54,4 @@ def run(input: dict[str, dict], **kwargs) -> dict[str, str]:
     # clean up
     if os.path.exists(experiment_config_file_path):
         os.remove(experiment_config_file_path)
-    return {task_id: "Completed", "evaluation": evaluation}
+    return evaluation["individual"]

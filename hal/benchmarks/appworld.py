@@ -75,24 +75,18 @@ class AppWorldBenchmark(BaseBenchmark):
         Returns:
             Dictionary with calculated metrics and task lists
         """
+        successful_tasks = []
+        failed_tasks = []
+        for task_id, result in eval_results.items():
+            if result.get("success", False):
+                successful_tasks.append(task_id)
+            else:
+                failed_tasks.append(task_id)
         metrics = {}
-        if "aggregate" in eval_results:
-            aggregate = eval_results["aggregate"]
-            for metric_name, value in aggregate.items():
-                metrics[f"aggregate_{metric_name}"] = value
-        if "aggregate_task_goal_completion" in metrics:
-            metrics["accuracy"] = metrics.pop("aggregate_task_goal_completion")
-        if "individual" in eval_results:
-            individual = eval_results["individual"]
-            successful_tasks = []
-            failed_tasks = []
-            for task_id, result in individual.items():
-                if result.get("success", False):
-                    successful_tasks.append(task_id)
-                else:
-                    failed_tasks.append(task_id)
-            metrics["successful_tasks"] = successful_tasks
-            metrics["failed_tasks"] = failed_tasks
+        metrics["successful_tasks"] = successful_tasks
+        metrics["failed_tasks"] = failed_tasks
+        accuracy = len(successful_tasks) / len(eval_results) if eval_results else 0.0
+        metrics["accuracy"] = accuracy
         return metrics
 
     def mount_benchmark(self):
