@@ -96,7 +96,9 @@ class AppWorldBenchmark(BaseBenchmark):
             if scenario_id_to_success
             else 0.0
         )
+        scenario_goal_completion = round(100 * scenario_goal_completion, 2)
         task_goal_completion = len(successful_task_ids) / len(eval_results) if eval_results else 0.0
+        task_goal_completion = round(100 * task_goal_completion, 2)
         metrics = {
             "accuracy": task_goal_completion,
             "task_goal_completion": task_goal_completion,
