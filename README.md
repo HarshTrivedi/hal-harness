@@ -135,7 +135,7 @@ For USACO, you will need to download and extract the USACO dataset. This can be 
 You will also need to **install docker** following the instructions [here](https://docs.docker.com/engine/install/). Docker is used during evaluation to run the USACO tasks. For linux users, you will also need to complete the linux post-installation steps [here](https://docs.docker.com/engine/install/linux-postinstall/).
  
 ### [AppWorld](https://appworld.dev/)
-- A benchmark for complex function/tool calling and/or coding agents
+- A benchmark for complex function calling and coding agents
 - Built on a high-fidelity API-based simulation of real-world apps, like Amazon, Gmail, Spotify, etc.
 - Supports both local and VM execution.
 
@@ -155,19 +155,19 @@ appworld download data --root hal/benchmarks/appworld
 With the `appworld_agent`, you can run any agent in the [AppWorld repository](https://github.com/stonybrooknlp/appworld) via `hal-eval` as follows:
 
 ```bash
-# For choices for the 3 variables below, checkout https://github.com/StonyBrookNLP/appworld/tree/main/experiments/configs
-# Each config file name there is named as: {METHOD_NAME}_{MODEL_NAME}_{DATASET_NAME}.jsonnet
-
-DATASET_NAME = "test_challenge"             # or test_normal
-METHOD_NAME = "simplified_react"            # or simplified_function_calling, smolagents_tool_calling, smolagents_code and many others
-MODEL_NAME = "gpt-4o-2024-05-13"            # or claude-3-7-sonnet-20250219-high-thinking, gemini-2.0-flash, deepseek-r1 and many others
-LEADERBOARD_NAME = "ReAct (${MODEL_NAME})"  # name of the HAL leaderboard entry as per its convention
-
+# For choices for the model and method variables below, checkout:
+# https://github.com/StonyBrookNLP/appworld/tree/main/experiments/configs/_generator/models/{company} for model (file) names
+# https://github.com/StonyBrookNLP/appworld/tree/main/experiments/configs/_generator/agents/ for agent (method) names
+DATASET_NAME = "test_challenge"                                # or test_normal, train or dev
+METHOD_NAME = "simplified_function_calling_agent"              # maps to 'agent_name' field in AppWorld AgentInfo
+MODEL_NAME = "claude-3-7-sonnet-20250219"                      # maps to 'model_id' field in AppWorld ModelInfo
+MODEL_FILE_NAME = "claude-3-7-sonnet-20250219-high-reasoning"  # maps to 'model_name' field in AppWorld ModelInfo
+LEADERBOARD_NAME = "Function Calling Agent (${MODEL_NAME})"    # name of the HAL leaderboard entry as per its convention
 hal-eval --benchmark appworld_${DATASET_NAME} \
   --agent_dir agents/appworld_agent \
   --agent_function main.run \
   --agent_name "${AGENT_NAME} (${MODEL_NAME})" \
-  -A model_name=${MODEL_NAME} -A method_name=${METHOD_NAME}
+  -A model_name=${MODEL_NAME} -A model_file_name=${MODEL_FILE_NAME} -A method_name=${METHOD_NAME}
 ```
 
 You can also convert HAL experiment outputs to AppWorld experiment outputs (via [this](https://github.com/StonyBrookNLP/appworld/blob/main/scripts/appworld_to_hal_leaderboard.py)) and vice versa (via [this](https://github.com/StonyBrookNLP/appworld/blob/main/scripts/hal_to_appworld__leaderboard.py)), to easily submit to both leaderboards.
