@@ -1,8 +1,9 @@
 import os
 
 from appworld import cli, update_root
+from appworld.common.io import write_file
 from appworld.common.path_store import path_store
-from appworld.common.utils import write_file
+from appworld.common.random import get_unique_id
 from appworld.evaluator import evaluate_dataset
 from appworld_experiments.configs._generator.run import make_experiment_config
 
@@ -31,8 +32,9 @@ def run(input: dict[str, dict], **kwargs) -> dict[str, str]:
         save=False,
     )
     experiment_config = output_["config"]
+    unique_id = get_unique_id()
     experiment_config_file_path = os.path.join(
-        path_store.experiment_configs, f"{task_id}.jsonnet"
+        path_store.experiment_configs, f"{unique_id}_{task_id}.jsonnet"
     )
     write_file(experiment_config, experiment_config_file_path)
     # run the experiment
