@@ -33,14 +33,21 @@ def run(input: dict[str, dict], **kwargs) -> dict[str, str]:
     )
     experiment_config = output_["config"]
     unique_id = get_unique_id()
+    experiment_name = f"{unique_id}_{task_id}"
     experiment_config_file_path = os.path.join(
-        path_store.experiment_configs, f"{unique_id}_{task_id}.jsonnet"
+        path_store.experiment_configs, f"{experiment_name}.jsonnet"
     )
     write_file(experiment_config, experiment_config_file_path)
     # run the experiment
     cli.run(
-        experiment_name=task_id,
+        experiment_name=experiment_name,
+        model_name=None,
+        agent_name=None,
+        dataset_name=None,
+        dry_run=False,
         task_id=None,
+        with_evaluation=False,
+        clear_first=True,
         override=None,
         num_processes=1,
         process_index=None,
@@ -48,7 +55,7 @@ def run(input: dict[str, dict], **kwargs) -> dict[str, str]:
     )
     # evaluate the results
     evaluation = evaluate_dataset(
-        experiment_name=task_id,
+        experiment_name=experiment_name,
         dataset_name=task_id,
         suppress_errors=True,
         include_details=True,
